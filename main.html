@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+	
+<script>
+	 var num=0;
+	function getInput()
+	{
+		num= document.getElementById("gridSize").value;
+		if (num == null || num == "") {
+		        alert("grid size must be filled out");
+		        return false;
+		}
+		printGrid(parseInt(num));
+	}
+</script>	
+	
+<h1>Hotplate Challenge</h1>
+
+	Grid Size: <input type="text" id="gridSize" name="gsize">
+	<button onclick='getInput()'>submit</button>
+	 
+ 
+ <script>
+	 function printGrid(size) {
+	 var grid = [];
+ 
+	 //initializations
+	 // for(var i=0; i<size*size; i++)
+	 // {
+	 // 	 grid[i] = 50;
+	 // }
+ 
+	 for(var i=0; i<size*size; i++)
+	 {
+		 switch (i) {
+		 case 0: 
+		 case size-1:
+		 case size*(size-1):
+			 case (size*size)-1: { grid[i]=0; break; }
+		 case size/2*size-size/2 : 
+		 case size/2*size-size/2-1:
+		 case (size/2+1)*size-size/2:
+			 case (size/2+1)*size-size/2-1: { grid[i]=100; break; }
+			 default: {grid[i]=50;break;}
+		 }
+	 }
+ 
+	 var percentchange = null;
+	 var totaliterations = 0;
+	 do
+	 {
+		 percentchange = null;
+		 var temp = [];
+		 for (var i = 0; i<size*size; i++)
+		 {
+			 if (i == 0 || i == size-1 || i == size*(size-1) || i ==(size*size)-1 ||
+				  i == size/2*size-size/2 || i == size/2*size-size/2-1 || 
+				 i == (size/2+1)*size-size/2 || i == (size/2+1)*size-size/2-1  )
+			 {
+				 temp[i] = grid[i];
+				 continue;
+			 }
+			 else {
+				 var orig = grid[i];
+				 var up = (i<size) ? null : i-size;
+				 var down = (i> size*(size-1))? null :i+size;
+				 var left = (i%size==0) ? null: i-1;
+				 var right = (i%size==size-1) ? null :i + 1;
+				 var total = 0;
+				 var items = 0;
+				 if (up != null)
+				 {
+					 total += grid[up];
+					 items++;
+				 }
+				 if (down != null)
+				 {
+					 total += grid[down];
+					 items++;
+				 }
+				 if (left != null)
+				 {
+					 total += grid[left];
+					 items++;
+				 }
+				 if (right != null)
+				 {
+					 total += grid[right];
+					 items++;
+				 }
+				 temp[i] = total/items;
+			 
+				 if(percentchange == null)
+					 percentchange = Math.abs(temp[i]-orig);
+				 else if(Math.abs(temp[i]-orig) > percentchange)
+				 {
+					 percentchange = Math.abs(temp[i]-orig);
+				 }
+			 
+			 }
+		 }
+		 grid = temp;
+		 //console.log(percentchange);
+		 totaliterations++;
+	 }while(percentchange>0.001)
+ 
+ 
+	console.log(totaliterations);
+
+	document.write("Iterations: " + totaliterations + "<br><br>");
+	//printing beuatiful
+	document.write("<table> <tr>");
+	for(var i=0; i<size*size; i++)
+	{
+		document.write("<td>"+grid[i].toFixed(2)+"</td>");
+		if(i%size==size-1)
+		{
+			document.write("</tr><tr>");
+		}
+	}
+	document.write("</tr> </table> ");
+	document.write("Diff: " + percentchange + "<br><br>");
+}
+</script>
+
+</body>
+</html>
